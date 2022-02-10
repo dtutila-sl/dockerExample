@@ -99,7 +99,7 @@ pipeline {
                    script {
                     output = sh returnStdout: true, script: "sfdx force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg"
                
-
+                echo output
                 // Wait 5 minutes for package replication.
                 sleep 300
 
@@ -110,7 +110,7 @@ pipeline {
 
                 response = null
 
-                echo ${PACKAGE_VERSION}
+                echo "${PACKAGE_VERSION}"
 }
                }
             }
@@ -184,5 +184,12 @@ pipeline {
             
         }
       
+    }
+}
+def command(script) {
+    if (isUnix()) {
+        return sh(returnStatus: true, script: script);
+    } else {
+        return bat(returnStatus: true, script: script);
     }
 }
