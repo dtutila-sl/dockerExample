@@ -98,7 +98,7 @@ pipeline {
                steps {
                     output = sh returnStdout: true, script: "sfdx force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg"
                
-
+script {
                 // Wait 5 minutes for package replication.
                 sleep 300
 
@@ -110,6 +110,7 @@ pipeline {
                 response = null
 
                 echo ${PACKAGE_VERSION}
+}
                }
             }
 
