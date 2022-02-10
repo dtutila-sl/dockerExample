@@ -36,8 +36,10 @@ pipeline {
             }
         }
         stage('checkout source') {
+             steps {
             checkout scm
              sh 'tree'
+             }
         }   
         stage('Authorize DevHub') {
            
