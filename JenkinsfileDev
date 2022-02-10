@@ -5,7 +5,7 @@ pipeline {
         label 'localAgent'
     }
     environment {
-        SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
+        SF_USERNAME_DEV = 'jenkins2@silverlinecrm.com.zendev'
         PRIVATE_KEY = credentials('SERVER_KEY_ID')
         CLIENT_ID_DEV = credentials('SF_CLIENT_ID_SRC')
         SF_LOGIN_DEV = 'https://login.salesforce.com'
