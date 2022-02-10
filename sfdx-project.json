@@ -1,12 +1,23 @@
 {
-  "packageDirectories": [
-    {
-      "path": "force-app",
-      "default": true
+    "packageDirectories": [
+        {
+            "path": "force-app",
+            "default": true
+        },
+        {
+            "path": "force-app/main/default",
+            "package": "docker",
+            "versionName": "ver 0.1",
+            "versionNumber": "0.1.0.NEXT",
+            "default": false
+        }
+    ],
+    "name": "dockerExample",
+    "namespace": "",
+    "sfdcLoginUrl": "https://login.salesforce.com",
+    "sourceApiVersion": "53.0",
+    "packageAliases": {
+        "docker": "0Ho8c0000004CILCA2",
+        "docker@0.1.0-2": "04t8c000000XtowAAC"
     }
-  ],
-  "name": "dockerExample",
-  "namespace": "",
-  "sfdcLoginUrl": "https://login.salesforce.com",
-  "sourceApiVersion": "53.0"
 }
