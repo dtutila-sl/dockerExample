@@ -56,7 +56,7 @@ pipeline {
 
         stage('Create Test Scratch Org') {
              steps {
-            sh  "$sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
+            sh  "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
             sh "sfdx force:org:display --targetusername ciorg"
              }
         }
@@ -84,7 +84,7 @@ pipeline {
 
             stage('Delete Test Scratch Org') {
                  steps {
-                sh "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
+                sh "sfdx force:org:delete --targetusername ciorg --noprompt"
                  }
     
             }
