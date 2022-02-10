@@ -2,7 +2,7 @@
 
 pipeline {
     agent {                                                             
-        docker { image 'dxatscale/sfpowerscripts' }
+        label 'localAgent'
     }
     environment {
         SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
@@ -13,6 +13,7 @@ pipeline {
         TEST_LEVEL = 'RunLocalTests'
         PACKAGE_NAME = '0Ho8c0000004CILCA2'
         PACKAGE_VERSION = '0.0.0'
+        DEVHUB_SFDX_AUTH_URL = 'https://login.salesforce.com'
     }
     options {
         disableConcurrentBuilds()
