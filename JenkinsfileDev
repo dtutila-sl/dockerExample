@@ -87,13 +87,5 @@ pipeline {
 
        
     }
-    post {
-        always {
-            echo 'cleaning up the workspace after build.....'
-            deleteDir()
-            sh 'echo "###DONE!!"'
-            
-        }
-      
-    }
+   
 }
