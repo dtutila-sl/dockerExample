@@ -1,6 +1,4 @@
 #!groovy
-import groovy.json.JsonSlurperClassic
-
 pipeline {
     agent {                                                             
         label 'localAgent'
@@ -101,7 +99,7 @@ pipeline {
                
 
                 // Wait 5 minutes for package replication.
-                sleep 300
+                sleep 180
 
                 def jsonSlurper = new JsonSlurperClassic()
                 def response = jsonSlurper.parseText(output)
