@@ -8,7 +8,7 @@ pipeline {
     environment {
         SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
         PRIVATE_KEY = credentials('SERVER_KEY_ID')
-        CLIENT_ID_DEV = credentials('SF_CLIENT_ID_SRC')
+        CLIENT_ID_DEV_BUILD = credentials('SF_CLIENT_ID_SRC')
         SF_LOGIN_DEV = 'https://login.salesforce.com'
         SF_DEV_PSW = credentials('SF_LOGIN_SRC_PSW')
         TEST_LEVEL = 'RunLocalTests'
@@ -44,7 +44,7 @@ pipeline {
         stage('Authorize DevHub') {
            
             steps {
-                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV} -r https://login.salesforce.com -a HubOrg'
+                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV_BUILD} -r https://login.salesforce.com -a HubOrg'
                 sh 'sfdx force:org:display -u ${SF_USERNAME_DEV}'
                 echo "Checking out repository..."
                 checkout scm
