@@ -2,7 +2,7 @@
 
 pipeline {
     agent {                                                             
-        label 'localAgent'
+        docker { image 'salesforce/salesforcedx:latest-full' }
     }
     environment {
         SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
