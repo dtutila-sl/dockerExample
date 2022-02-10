@@ -53,17 +53,23 @@ pipeline {
         }
 
         stage('Create Test Scratch Org') {
+             steps {
             sh  "$sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
             sh "sfdx force:org:display --targetusername ciorg"
+             }
         }
 
         stage('Push To Test Scratch Org') {
+             steps {
                 sh "sfdx force:source:push --targetusername ciorg"
+             }
                 
         }
 
         stage('Run Tests In Test Scratch Org') {
+             steps {
                 sh  "sfdx force:apex:test:run --targetusername ciorg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
+             }
               
             }
 
@@ -75,7 +81,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Delete Test Scratch Org') {
+                 steps {
                 sh "${toolbelt}/sfdx force:org:delete --targetusername ciorg --noprompt"
+                 }
     
             }
 
@@ -85,7 +93,7 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Create Package Version') {
-              
+               steps {
                     output = sh returnStdout: true, script: "sfdx force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg"
                
 
@@ -100,6 +108,7 @@ pipeline {
                 response = null
 
                 echo ${PACKAGE_VERSION}
+               }
             }
 
 
@@ -108,7 +117,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Create Package Install Scratch Org') {
-               sh "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --wait 10 --durationdays 1"
+                 steps {
+                    sh "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --wait 10 --durationdays 1"
+                 }
     
             }
 
@@ -118,7 +129,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Display Install Scratch Org') {
+                 steps {
                 sh  "sfdx force:org:display --targetusername installorg"
+                 }
              
             }
 
@@ -128,7 +141,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Install Package In Scratch Org') {
+                 steps {
                sh "sfdx force:package:install --package ${PACKAGE_VERSION} --targetusername installorg --wait 10"
+                 }
                
             }
 
@@ -138,7 +153,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Run Tests In Package Install Scratch Org') {
+                 steps {
                 sh  "sfdx force:apex:test:run --targetusername installorg --resultformat tap --codecoverage --testlevel ${TEST_LEVEL} --wait 10"
+                 }
             
             }
 
@@ -148,7 +165,9 @@ pipeline {
             // -------------------------------------------------------------------------
 
             stage('Delete Package Install Scratch Org') {
+                 steps {
                 sh "sfdx force:org:delete --targetusername installorg --noprompt"
+                 }
                
             }
        
