@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
-        PRIVATE_KEY_BUILD_BUILD = credentials('SERVER_KEY_ID')
+        PRIVATE_KEY_BUILD_BUILD = credentials('SERVER_KEY_ID_2')
         CLIENT_ID_DEV_BUILD = credentials('SF_CLIENT_ID_SRC')
         SF_LOGIN_DEV = 'https://login.salesforce.com'
         SF_DEV_PSW = credentials('SF_LOGIN_SRC_PSW')
