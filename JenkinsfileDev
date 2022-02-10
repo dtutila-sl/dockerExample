@@ -1,5 +1,4 @@
 #!groovy
-import groovy.json.JsonSlurperClassic
 
 pipeline {
     agent {                                                             
@@ -44,7 +43,7 @@ pipeline {
         stage('Authorize DevHub') {
            
             steps {
-                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV} -r https://login.salesforce.com -a HubOrg'
+                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV} -r https://login.salesforce.com -a devHub'
                 sh 'sfdx force:org:display -u ${SF_USERNAME_DEV}'
                 echo "Checking out repository..."
                 checkout scm
@@ -56,21 +55,21 @@ pipeline {
 
         stage('Create Test Scratch Org') {
              steps {
-            sh  "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
-            sh "sfdx force:org:display --targetusername ciorg"
+            sh  "sfdx force:org:create --targetdevhubusername devHub --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorgDEV --wait 10 --durationdays 1"
+            sh "sfdx force:org:display --targetusername ciorgDEV"
              }
         }
 
         stage('Push To Test Scratch Org') {
              steps {
-                sh "sfdx force:source:push --targetusername ciorg"
+                sh "sfdx force:source:push --targetusername ciorgDEV"
              }
                 
         }
 
         stage('Run Tests In Test Scratch Org') {
              steps {
-                sh  "sfdx force:apex:test:run --targetusername ciorg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
+                sh  "sfdx force:apex:test:run --targetusername ciorgDEV --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
              }
               
             }
@@ -84,7 +83,7 @@ pipeline {
 
             stage('Delete Test Scratch Org') {
                  steps {
-                sh "sfdx force:org:delete --targetusername ciorg --noprompt"
+                sh "sfdx force:org:delete --targetusername ciorgDEV --noprompt"
                  }
     
             }
