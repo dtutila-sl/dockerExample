@@ -26,11 +26,7 @@ pipeline {
               
                  echo "Checking environment"
                  sh """
-                 whoami
-                 pwd
-                 uname -a
-                 ls
-                 sfdx version
+                  sfdx version
                  """
             }
         }
