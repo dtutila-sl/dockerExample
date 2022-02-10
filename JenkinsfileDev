@@ -2,7 +2,7 @@
 
 pipeline {
     agent {                                                             
-        docker { image 'salesforce/salesforcedx:latest-full' }
+        docker { image 'dxatscale/sfpowerscripts' }
     }
     environment {
         SF_USERNAME_DEV = 'jenkins1@silverlinecrm.com.zendev'
