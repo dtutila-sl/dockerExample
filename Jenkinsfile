@@ -42,7 +42,7 @@ pipeline {
         stage('Authorize DevHub') {
            
             steps {
-                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV} -r https://login.salesforce.com -a HubOrg'
+                sh 'sfdx auth:jwt:grant -u ${SF_USERNAME_DEV} -f ${PRIVATE_KEY} -i ${CLIENT_ID_DEV} -r https://login.salesforce.com -a devOrg'
                 sh 'sfdx force:org:display -u ${SF_USERNAME_DEV}'
                 echo "Checking out repository..."
                 checkout scm
@@ -54,21 +54,21 @@ pipeline {
 
         stage('Create Test Scratch Org') {
              steps {
-            sh  "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorg --wait 10 --durationdays 1"
-            sh "sfdx force:org:display --targetusername ciorg"
+            sh  "sfdx force:org:create --targetdevhubusername devOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias ciorgDev --wait 10 --durationdays 1"
+            sh "sfdx force:org:display --targetusername ciorgDev"
              }
         }
 
         stage('Push To Test Scratch Org') {
              steps {
-                sh "sfdx force:source:push --targetusername ciorg"
+                sh "sfdx force:source:push --targetusername ciorgDev"
              }
                 
         }
 
         stage('Run Tests In Test Scratch Org') {
              steps {
-                sh  "sfdx force:apex:test:run --targetusername ciorg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
+                sh  "sfdx force:apex:test:run --targetusername ciorgDev --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
              }
               
             }
@@ -82,7 +82,7 @@ pipeline {
 
             stage('Delete Test Scratch Org') {
                  steps {
-                sh "sfdx force:org:delete --targetusername ciorg --noprompt"
+                sh "sfdx force:org:delete --targetusername ciorgDev --noprompt"
                  }
     
             }
@@ -95,7 +95,7 @@ pipeline {
             stage('Create Package Version') {
                steps {
                    script {
-                    output = sh returnStdout: true, script: "sfdx force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --json --targetdevhubusername HubOrg"
+                    output = sh returnStdout: true, script: "sfdx force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --json --targetdevhubusername devOrg"
                
 
                 // Wait 5 minutes for package replication.
@@ -120,7 +120,7 @@ pipeline {
 
             stage('Create Package Install Scratch Org') {
                  steps {
-                    sh "sfdx force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --wait 10 --durationdays 1"
+                    sh "sfdx force:org:create --targetdevhubusername devOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --wait 10 --durationdays 1"
                  }
     
             }
